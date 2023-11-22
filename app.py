@@ -11,14 +11,27 @@ class camisa(produto):
         super().__init__(nome, preço)
         self.tamanho = tamanho
 
-    def AdicionarCamisa(nome, preço, tamanho, carrinho):
-        camisa_vendida = camisa(nome, preço, tamanho)
-        cesta = dict()
-        cesta['Nome'] = camisa_vendida.nome
-        cesta['Preço'] = camisa_vendida.preço
-        cesta['Tamanho'] = camisa_vendida.tamanho
-        carrinho.append(cesta)
+    def TamanhoCamisa(quantia):
+        tamanho = str(input(f'Qual tamanho da {quantia+1}ª camisa que você deseja? [P] [M] [G]: ')).strip().upper()[0]
+        while True:
+            if tamanho not in 'PMG':
+                tamanho = str(input('Digite um tamanho válido [P] [M] [G]: ')).strip().upper()[0]
+            else:
+                break
+        return tamanho
+
+    def AdicionarCamisa(nome, preço, carrinho):
+        quantidade = int(input('Quantas unidades você quer? '))
+        for c in range(quantidade):
+            tamanho = camisa.TamanhoCamisa(c)
+            camisa_vendida = camisa(nome, preço, tamanho)
+            cesta = dict()
+            cesta['Nome'] = camisa_vendida.nome
+            cesta['Preço'] = camisa_vendida.preço
+            cesta['Tamanho'] = camisa_vendida.tamanho
+            carrinho.append(cesta)
         print(carrinho)
+        menu()
     
 class caneca(produto):
     def __init__(self, nome, preço, capacidade):
@@ -49,13 +62,16 @@ def AdicionarProduto():
     print('-'*30)
     print('ADICIONAR PRODUTO AO CARRINHO')
     print('-'*30)
-    print('[1] CAMISA')
+    print('[1] CAMISA - R$30,00')
     print('[2] CANECA')
     print('[3] QUADRINHO')
     print('-'*30)
     escolha = ValidarEscolha(1, 3)
     if escolha == 1:
-        camisa.AdicionarCamisa('Camisa', 30, 'P', carrinho)
+        #tamanho = camisa.TamanhoCamisa()
+        camisa.AdicionarCamisa('Camisa', 30, carrinho)
+    #elif escolha == 2:
+        #caneca.AdicionarCaneca('Caneca', )
 
 
 
