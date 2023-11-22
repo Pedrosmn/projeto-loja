@@ -21,7 +21,8 @@ class camisa(produto):
         return tamanho
 
     def AdicionarCamisa(nome, preço, carrinho):
-        quantidade = int(input('Quantas unidades você quer? '))
+        print('Quantas unidades você quer?')
+        quantidade = ValidarEscolha(0, 0, False)
         for c in range(quantidade):
             tamanho = camisa.TamanhoCamisa(c)
             camisa_vendida = camisa(nome, preço, tamanho)
@@ -38,6 +39,39 @@ class caneca(produto):
         super().__init__(nome, preço)
         self.capacidade = capacidade
 
+    def CapacidadeCaneca(quantia):
+        print(f'Qual a capacidade da {quantia+1}ª caneca que você deseja?')
+        print('[P] 0,2L')
+        print('[M] 0,3L')
+        print('[G] 0,4L')
+        tamanho = str(input('DIGITE: ')).strip().upper()[0]
+        while True:
+            if tamanho not in 'PMG':
+                tamanho = str(input('Digite uma capacidade válido [P] [M] [G]: ')).strip().upper()[0]
+            else:
+                if tamanho == 'P':
+                    capacidade = 0.2
+                elif tamanho == 'M':
+                    capacidade = 0.3
+                elif tamanho == 'G':
+                    capacidade = 0.4
+                break
+        return capacidade
+    
+    def AdicionarCaneca(nome, preço, carrinho):
+        print('Quantas unidades você quer?')
+        quantidade = ValidarEscolha(0, 0, False)
+        for c in range(quantidade):
+            capacidade = caneca.CapacidadeCaneca(c)
+            caneca_vendida = caneca(nome, preço, capacidade)
+            cesta = dict()
+            cesta['Nome'] = caneca_vendida.nome
+            cesta['Preço'] = caneca_vendida.preço
+            cesta['Capacidade'] = caneca_vendida.capacidade
+            carrinho.append(cesta)
+        print(carrinho)
+        menu()
+
 
 class quadrinho(produto):
     def __init__(self, nome, preço, autor, editora):
@@ -45,11 +79,14 @@ class quadrinho(produto):
         self.autor = autor
         self.editora = editora
 
-def ValidarEscolha(min, max):
+def ValidarEscolha(min, max, entre_números=True):
     while True:
         try:
             escolha = int(input('DIGITE: '))
-            while escolha > max or escolha < min:
+            while (escolha > max or escolha < min) and entre_números is True:
+                print('Digite um valor válido')
+                escolha = int(input('DIGITE: '))
+            while escolha < min and entre_números is False:
                 print('Digite um valor válido')
                 escolha = int(input('DIGITE: '))
         except:
@@ -68,10 +105,9 @@ def AdicionarProduto():
     print('-'*30)
     escolha = ValidarEscolha(1, 3)
     if escolha == 1:
-        #tamanho = camisa.TamanhoCamisa()
         camisa.AdicionarCamisa('Camisa', 30, carrinho)
-    #elif escolha == 2:
-        #caneca.AdicionarCaneca('Caneca', )
+    elif escolha == 2:
+        caneca.AdicionarCaneca('Caneca', 15, carrinho)
 
 
 
