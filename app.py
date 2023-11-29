@@ -79,6 +79,26 @@ class quadrinho(produto):
         self.autor = autor
         self.editora = editora
 
+    def AdicionarQuadrinho(preço, carrinho):
+        estoque_hq = [{'Nome': 'HQ Turma da Mônica', 'Preço': 20, 'Autor': 'Mauricio de Sousa', 'Editora': 'Panini'}, {'Nome': 'HQ Invencível', 'Preço': 20, 'Autor': 'Robert Kirkman', 'Editora': 'HQM'}, {'Nome': 'HQ Scott Pilgrim', 'Preço': 20, 'Autor': "Bryan Lee O'Malley", 'Editora': 'Quadrinhos na Cia'}]
+        print('Quantas unidades você quer?')
+        quantidade = ValidarEscolha(0, 0, False)
+        for c in range(quantidade):
+            print(f'Qual o {c+1}º quadrinho você quer comprar?')
+            print(f'[1] {estoque_hq[0]["Nome"]}')
+            print(f'[2] {estoque_hq[1]["Nome"]}')
+            print(f'[3] {estoque_hq[2]["Nome"]}')
+            escolha = ValidarEscolha(1, 3)
+            quadrinho_vendida = quadrinho(estoque_hq[escolha-1]['Nome'], preço, estoque_hq[escolha-1]['Autor'], estoque_hq[escolha-1]['Editora'])
+            cesta = dict()
+            cesta['Nome'] = quadrinho_vendida.nome
+            cesta['Preço'] = quadrinho_vendida.preço
+            cesta['Autor'] = quadrinho_vendida.autor
+            cesta['Editora'] = quadrinho_vendida.editora
+            carrinho.append(cesta)
+        print(carrinho)
+        menu()
+
 def ValidarEscolha(min, max, entre_números=True):
     while True:
         try:
@@ -105,15 +125,57 @@ def AdicionarProduto():
     print('-'*30)
     escolha = ValidarEscolha(1, 3)
     if escolha == 1:
-        camisa.AdicionarCamisa('Camisa', 30, carrinho)
+        camisa.AdicionarCamisa('CAMISA', 30, carrinho)
     elif escolha == 2:
-        caneca.AdicionarCaneca('Caneca', 15, carrinho)
+        caneca.AdicionarCaneca('CANECA', 15, carrinho)
+    elif escolha == 3:
+        quadrinho.AdicionarQuadrinho(20, carrinho)
+
+def RemoverProduto():
+    if len(carrinho) == 0:
+        print('Seu carrinho está vazio!')
+        menu()
+    else:
+        for c in range(len(carrinho)):
+            print(f'[{c+1}] ', end='')
+            for v in carrinho[c].values():
+                print(f'{v:<20} ', end='')
+            print()
+        escolha = ValidarEscolha(1, len(carrinho), True)
+        carrinho.pop(escolha-1)
+        menu()
+
+def Promoção():
+    contador_camisa = contador_hq = hq_menor_preço = 0
+    for c in range(len(carrinho)):
+        for k, v in carrinho[c].items():
+            if k == 'Autor':
+                contador_hq += 1
+                if carrinho[c]['Preço'] < hq_menor_preço or hq_menor_preço == 0:
+                    hq_menor_preço = c
+        if contador_hq == 5:
+            carrinho[hq_menor_preço]['Preço'] = 0
+            contador_hq = 0
+
+            if k == 'Nome' and v == 'CAMISA':
+                contador_camisa += 1
+    if contador_camisa >= 4:
+        contador_camisa = contador_camisa // 4
+        for c in range(contador_camisa):
+            caneca_vendida = caneca('CANECA', 15, 0.3)
+            cesta = dict()
+            cesta['Nome'] = caneca_vendida.nome
+            cesta['Preço'] = caneca_vendida.preço
+            cesta['Capacidade'] = caneca_vendida.capacidade
+            carrinho.append(cesta)
+    print(carrinho)
 
 
 
-def menu(carrinho=None):
-    if carrinho is None:
-        carrinho = list()
+def FinalizarCompra():
+    Promoção()
+
+def menu():
     print('-'*30)
     print('LOJA GEEK')
     print('-'*30)
@@ -123,10 +185,10 @@ def menu(carrinho=None):
     escolha = ValidarEscolha(1, 3)
     if escolha == 1:
         AdicionarProduto()
-    '''elif escolha == 2:
+    elif escolha == 2:
         RemoverProduto()
     elif escolha == 3:
-        FinalizarCompra()'''
+        FinalizarCompra()
 
 
 
