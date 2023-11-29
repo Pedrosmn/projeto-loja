@@ -12,6 +12,9 @@ class camisa(produto):
         self.tamanho = tamanho
 
     def TamanhoCamisa(quantia):
+        print('[P] R$30,00')
+        print('[M] R$35,00')
+        print('[G] R$40,00')
         tamanho = str(input(f'Qual tamanho da {quantia+1}ª camisa que você deseja? [P] [M] [G]: ')).strip().upper()[0]
         while True:
             if tamanho not in 'PMG':
@@ -20,11 +23,17 @@ class camisa(produto):
                 break
         return tamanho
 
-    def AdicionarCamisa(nome, preço, carrinho):
+    def AdicionarCamisa(nome, carrinho):
         print('Quantas unidades você quer?')
         quantidade = ValidarEscolha(0, 0, False)
         for c in range(quantidade):
             tamanho = camisa.TamanhoCamisa(c)
+            if tamanho == 'P':
+                preço = 30
+            elif tamanho == 'M':
+                preço = 35
+            elif tamanho == 'G':
+                preço = 40
             camisa_vendida = camisa(nome, preço, tamanho)
             cesta = dict()
             cesta['Nome'] = camisa_vendida.nome
@@ -41,9 +50,9 @@ class caneca(produto):
 
     def CapacidadeCaneca(quantia):
         print(f'Qual a capacidade da {quantia+1}ª caneca que você deseja?')
-        print('[P] 0,2L')
-        print('[M] 0,3L')
-        print('[G] 0,4L')
+        print('[P] 0,2L - R$10,00')
+        print('[M] 0,3L - R$15,00')
+        print('[G] 0,4L - R$20,00')
         tamanho = str(input('DIGITE: ')).strip().upper()[0]
         while True:
             if tamanho not in 'PMG':
@@ -58,11 +67,17 @@ class caneca(produto):
                 break
         return capacidade
     
-    def AdicionarCaneca(nome, preço, carrinho):
+    def AdicionarCaneca(nome, carrinho):
         print('Quantas unidades você quer?')
         quantidade = ValidarEscolha(0, 0, False)
         for c in range(quantidade):
             capacidade = caneca.CapacidadeCaneca(c)
+            if capacidade == 0.2:
+                preço = 10
+            elif capacidade == 0.3:
+                preço = 15
+            elif capacidade == 0.4:
+                preço = 20
             caneca_vendida = caneca(nome, preço, capacidade)
             cesta = dict()
             cesta['Nome'] = caneca_vendida.nome
@@ -79,17 +94,16 @@ class quadrinho(produto):
         self.autor = autor
         self.editora = editora
 
-    def AdicionarQuadrinho(preço, carrinho):
-        estoque_hq = [{'Nome': 'HQ Turma da Mônica', 'Preço': 20, 'Autor': 'Mauricio de Sousa', 'Editora': 'Panini'}, {'Nome': 'HQ Invencível', 'Preço': 20, 'Autor': 'Robert Kirkman', 'Editora': 'HQM'}, {'Nome': 'HQ Scott Pilgrim', 'Preço': 20, 'Autor': "Bryan Lee O'Malley", 'Editora': 'Quadrinhos na Cia'}]
+    def AdicionarQuadrinho(carrinho):
+        estoque_hq = [{'Nome': 'HQ Turma da Mônica', 'Preço': 10, 'Autor': 'Mauricio de Sousa', 'Editora': 'Panini'}, {'Nome': 'HQ Invencível', 'Preço': 50, 'Autor': 'Robert Kirkman', 'Editora': 'HQM'}, {'Nome': 'HQ Scott Pilgrim', 'Preço': 40, 'Autor': "Bryan Lee O'Malley", 'Editora': 'Quadrinhos na Cia'}]
         print('Quantas unidades você quer?')
         quantidade = ValidarEscolha(0, 0, False)
         for c in range(quantidade):
             print(f'Qual o {c+1}º quadrinho você quer comprar?')
-            print(f'[1] {estoque_hq[0]["Nome"]}')
-            print(f'[2] {estoque_hq[1]["Nome"]}')
-            print(f'[3] {estoque_hq[2]["Nome"]}')
+            for c in range(len(estoque_hq)):
+                print(f'[{c+1}] {estoque_hq[c]["Nome"]}')
             escolha = ValidarEscolha(1, 3)
-            quadrinho_vendida = quadrinho(estoque_hq[escolha-1]['Nome'], preço, estoque_hq[escolha-1]['Autor'], estoque_hq[escolha-1]['Editora'])
+            quadrinho_vendida = quadrinho(estoque_hq[escolha-1]['Nome'], estoque_hq[escolha-1]['Preço'], estoque_hq[escolha-1]['Autor'], estoque_hq[escolha-1]['Editora'])
             cesta = dict()
             cesta['Nome'] = quadrinho_vendida.nome
             cesta['Preço'] = quadrinho_vendida.preço
@@ -119,17 +133,17 @@ def AdicionarProduto():
     print('-'*30)
     print('ADICIONAR PRODUTO AO CARRINHO')
     print('-'*30)
-    print('[1] CAMISA - R$30,00')
+    print('[1] CAMISA')
     print('[2] CANECA')
     print('[3] QUADRINHO')
     print('-'*30)
     escolha = ValidarEscolha(1, 3)
     if escolha == 1:
-        camisa.AdicionarCamisa('CAMISA', 30, carrinho)
+        camisa.AdicionarCamisa('CAMISA', carrinho)
     elif escolha == 2:
-        caneca.AdicionarCaneca('CANECA', 15, carrinho)
+        caneca.AdicionarCaneca('CANECA', carrinho)
     elif escolha == 3:
-        quadrinho.AdicionarQuadrinho(20, carrinho)
+        quadrinho.AdicionarQuadrinho(carrinho)
 
 def RemoverProduto():
     if len(carrinho) == 0:
@@ -174,6 +188,11 @@ def Promoção():
 
 def FinalizarCompra():
     Promoção()
+    for c in range(len(carrinho)):
+        print(f'[{c+1}] ', end='')
+        for v in carrinho[c].values():
+            print(f'{v:<20} ', end='')
+        print()
 
 def menu():
     print('-'*30)
